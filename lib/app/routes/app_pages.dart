@@ -1,14 +1,14 @@
 import 'package:get/get.dart';
-import '../modules/splash/splash_binding.dart';
-import '../modules/splash/splash_view.dart';
-import '../modules/home/home_binding.dart';
-import '../modules/home/home_view.dart';
-import '../modules/add_habit/add_habit_binding.dart';
-import '../modules/add_habit/add_habit_view.dart';
-import '../modules/statistics/statistics_binding.dart';
-import '../modules/statistics/statistics_view.dart';
-import '../modules/settings/settings_binding.dart';
-import '../modules/settings/settings_view.dart';
+import '../modules/splash/bindings/splash_binding.dart';
+import '../modules/splash/views/splash_view.dart';
+import '../modules/home/bindings/home_binding.dart';
+import '../modules/home/views/home_view.dart';
+import '../modules/add_habit/bindings/add_habit_binding.dart';
+import '../modules/add_habit/views/add_habit_view.dart';
+import '../modules/statistics/bindings/statistics_binding.dart';
+import '../modules/statistics/views/statistics_view.dart';
+import '../modules/settings/bindings/settings_binding.dart';
+import '../modules/settings/views/settings_view.dart';
 
 part 'app_routes.dart';
 

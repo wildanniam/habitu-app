@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'statistics_controller.dart';
+import '../controllers/statistics_controller.dart';
 
 class StatisticsBinding extends Bindings {
   @override

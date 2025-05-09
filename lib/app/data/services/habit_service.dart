@@ -49,42 +49,13 @@ class HabitService extends GetxService {
     final index = _habits.indexWhere((h) => h.id == id);
     if (index != -1) {
       final habit = _habits[index];
-      final now = DateTime.now();
-      final today = DateTime(now.year, now.month, now.day);
-
-      // Jika habit belum di-complete hari ini
-      if (!habit.isCompletedToday) {
-        final lastCompleted = habit.lastCompletedAt;
-        final yesterday = DateTime(today.year, today.month, today.day - 1);
-
-        // Cek apakah terakhir complete kemarin
-        if (lastCompleted != null &&
-            DateTime(
-              lastCompleted.year,
-              lastCompleted.month,
-              lastCompleted.day,
-            ).isAtSameMomentAs(yesterday)) {
-          // Increment streak
-          _habits[index] = habit.copyWith(
-            isCompletedToday: true,
-            streakCount: habit.streakCount + 1,
-            lastCompletedAt: now,
-          );
-        } else {
-          // Reset streak jika tidak berurutan
-          _habits[index] = habit.copyWith(
-            isCompletedToday: true,
-            streakCount: 1,
-            lastCompletedAt: now,
-          );
-        }
-      } else {
-        // Uncheck habit
-        _habits[index] = habit.copyWith(
-          isCompletedToday: false,
-          lastCompletedAt: null,
-        );
-      }
+      final updatedHabit = habit.copyWith(
+        isCompletedToday: !habit.isCompletedToday,
+        streakCount:
+            !habit.isCompletedToday ? habit.streakCount + 1 : habit.streakCount,
+        lastCompletedAt: !habit.isCompletedToday ? DateTime.now() : null,
+      );
+      _habits[index] = updatedHabit;
       _saveHabits();
     }
   }
@@ -110,6 +81,11 @@ class HabitService extends GetxService {
         }
       }
     }
+    _saveHabits();
+  }
+
+  void resetHabits() {
+    _habits.clear();
     _saveHabits();
   }
 }
