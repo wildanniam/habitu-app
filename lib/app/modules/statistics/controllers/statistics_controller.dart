@@ -13,11 +13,11 @@ class StatisticsController extends GetxController {
   final completedToday = 0.obs;
   final longestStreak = 0.obs;
   final completionRate = 0.0.obs;
-  final barGroups = <BarChartGroupData>[].obs;
-  final showTooltip = false.obs;
-  final tooltipIndex = 0.obs;
   final selectedPeriod = 'Minggu'.obs;
   final periodOptions = ['Minggu', 'Bulan', 'Tahun'].obs;
+
+  // Data untuk grafik
+  final barGroups = <BarChartGroupData>[].obs;
 
   @override
   void onInit() {
@@ -43,15 +43,6 @@ class StatisticsController extends GetxController {
   }
 
   void _generateBarChartData() {
-    final List<BarChartGroupData> groups = [];
-    final List<Color> pastelColors = [
-      const Color(0xFFFFB3BA), // Pastel Pink
-      const Color(0xFFFFDFBA), // Pastel Orange
-      const Color(0x0fffffba), // Pastel Yellow
-      const Color(0xFFBAFFC9), // Pastel Green
-      const Color(0xFFBAE1FF), // Pastel Blue
-    ];
-
     final now = DateTime.now();
     final habits = _habitService.habits;
     int daysToShow = 7;
@@ -68,7 +59,15 @@ class StatisticsController extends GetxController {
         break;
     }
 
-    // Hitung jumlah habit yang selesai per hari
+    final List<BarChartGroupData> groups = [];
+    final List<Color> pastelColors = [
+      const Color(0xFFFFB3BA), // Pastel Pink
+      const Color(0xFFFFDFBA), // Pastel Orange
+      const Color(0x0fffffba), // Pastel Yellow
+      const Color(0xFFBAFFC9), // Pastel Green
+      const Color(0xFFBAE1FF), // Pastel Blue
+    ];
+
     for (int i = 0; i < daysToShow; i++) {
       final date = now.subtract(Duration(days: daysToShow - 1 - i));
       final completions = _getCompletionsForDate(habits, date);
@@ -116,22 +115,13 @@ class StatisticsController extends GetxController {
     _generateBarChartData();
   }
 
-  String getFormattedDate(int index) {
-    final now = DateTime.now();
-    final date = now.subtract(Duration(days: barGroups.length - 1 - index));
-    return DateFormat('dd/MM').format(date);
-  }
-
   String getFormattedPercentage(double value) {
     return '${value.toStringAsFixed(1)}%';
   }
 
-  void showBarTooltip(int index) {
-    tooltipIndex.value = index;
-    showTooltip.value = true;
-  }
-
-  void hideBarTooltip() {
-    showTooltip.value = false;
+  String getFormattedDate(int index) {
+    final now = DateTime.now();
+    final date = now.subtract(Duration(days: barGroups.length - 1 - index));
+    return DateFormat('dd/MM').format(date);
   }
 }

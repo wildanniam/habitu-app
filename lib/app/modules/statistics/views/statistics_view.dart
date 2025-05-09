@@ -152,113 +152,134 @@ class StatisticsView extends GetView<StatisticsController> {
               ),
               const SizedBox(height: 24),
 
-              // Bar Chart
+              // Grafik Statistik
               Container(
-                height: 300,
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                child: Obx(() {
-                  if (controller.barGroups.isEmpty) {
-                    return Center(
-                      child: CircularProgressIndicator(
-                        color: Get.theme.colorScheme.primary,
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: cardColor,
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Statistik ${controller.selectedPeriod.value}an',
+                      style: GoogleFonts.poppins(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                        color: textColor,
                       ),
-                    );
-                  }
-
-                  return BarChart(
-                    BarChartData(
-                      alignment: BarChartAlignment.spaceAround,
-                      maxY: 100,
-                      minY: 0,
-                      barTouchData: BarTouchData(
-                        enabled: true,
-                        touchTooltipData: BarTouchTooltipData(
-                          tooltipBgColor: cardColor,
-                          tooltipPadding: const EdgeInsets.all(8),
-                          tooltipMargin: 8,
-                          getTooltipItem: (group, groupIndex, rod, rodIndex) {
-                            return BarTooltipItem(
-                              '${controller.getFormattedPercentage(rod.toY)}\n${controller.getFormattedDate(groupIndex)}',
-                              GoogleFonts.poppins(
-                                color: textColor,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 12,
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                      titlesData: FlTitlesData(
-                        show: true,
-                        bottomTitles: AxisTitles(
-                          sideTitles: SideTitles(
-                            showTitles: true,
-                            getTitlesWidget: (value, meta) {
-                              if (value.toInt() >=
-                                  controller.barGroups.length) {
-                                return const SizedBox();
-                              }
-                              return Padding(
-                                padding: const EdgeInsets.only(top: 8.0),
-                                child: Text(
-                                  controller.getFormattedDate(value.toInt()),
-                                  style: GoogleFonts.poppins(
-                                    color: secondaryTextColor,
-                                    fontSize: 12,
-                                  ),
-                                ),
-                              );
-                            },
-                            reservedSize: 30,
-                          ),
-                        ),
-                        leftTitles: AxisTitles(
-                          sideTitles: SideTitles(
-                            showTitles: true,
-                            getTitlesWidget: (value, meta) {
-                              if (value == 0) return const SizedBox();
-                              return Text(
-                                '${value.toInt()}%',
-                                style: GoogleFonts.poppins(
-                                  color: secondaryTextColor,
-                                  fontSize: 12,
-                                ),
-                              );
-                            },
-                            reservedSize: 40,
-                            interval: 20,
-                          ),
-                        ),
-                        topTitles: const AxisTitles(
-                          sideTitles: SideTitles(showTitles: false),
-                        ),
-                        rightTitles: const AxisTitles(
-                          sideTitles: SideTitles(showTitles: false),
-                        ),
-                      ),
-                      borderData: FlBorderData(
-                        show: true,
-                        border: Border(
-                          bottom: BorderSide(color: gridColor),
-                          left: BorderSide(color: gridColor),
-                        ),
-                      ),
-                      gridData: FlGridData(
-                        show: true,
-                        drawVerticalLine: false,
-                        horizontalInterval: 20,
-                        getDrawingHorizontalLine: (value) {
-                          return FlLine(
-                            color: gridColor,
-                            strokeWidth: 1,
-                            dashArray: [5, 5],
-                          );
-                        },
-                      ),
-                      barGroups: controller.barGroups,
                     ),
-                  );
-                }),
+                    const SizedBox(height: 16),
+                    SizedBox(
+                      height: 200,
+                      child: Obx(() {
+                        if (controller.barGroups.isEmpty) {
+                          return Center(
+                            child: CircularProgressIndicator(
+                              color: Get.theme.colorScheme.primary,
+                            ),
+                          );
+                        }
+                        return BarChart(
+                          BarChartData(
+                            alignment: BarChartAlignment.spaceAround,
+                            maxY: 100,
+                            minY: 0,
+                            barTouchData: BarTouchData(
+                              enabled: true,
+                              touchTooltipData: BarTouchTooltipData(
+                                tooltipBgColor: cardColor,
+                                tooltipPadding: const EdgeInsets.all(8),
+                                tooltipMargin: 8,
+                                getTooltipItem:
+                                    (group, groupIndex, rod, rodIndex) {
+                                  return BarTooltipItem(
+                                    '${controller.getFormattedPercentage(rod.toY)}\n${controller.getFormattedDate(groupIndex)}',
+                                    GoogleFonts.poppins(
+                                      color: textColor,
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 12,
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                            titlesData: FlTitlesData(
+                              show: true,
+                              bottomTitles: AxisTitles(
+                                sideTitles: SideTitles(
+                                  showTitles: true,
+                                  getTitlesWidget: (value, meta) {
+                                    if (value.toInt() >=
+                                        controller.barGroups.length) {
+                                      return const SizedBox();
+                                    }
+                                    return Padding(
+                                      padding: const EdgeInsets.only(top: 8.0),
+                                      child: Text(
+                                        controller
+                                            .getFormattedDate(value.toInt()),
+                                        style: GoogleFonts.poppins(
+                                          color: secondaryTextColor,
+                                          fontSize: 12,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  reservedSize: 30,
+                                ),
+                              ),
+                              leftTitles: AxisTitles(
+                                sideTitles: SideTitles(
+                                  showTitles: true,
+                                  getTitlesWidget: (value, meta) {
+                                    if (value == 0) return const SizedBox();
+                                    return Text(
+                                      '${value.toInt()}%',
+                                      style: GoogleFonts.poppins(
+                                        color: secondaryTextColor,
+                                        fontSize: 12,
+                                      ),
+                                    );
+                                  },
+                                  reservedSize: 40,
+                                  interval: 20,
+                                ),
+                              ),
+                              topTitles: const AxisTitles(
+                                sideTitles: SideTitles(showTitles: false),
+                              ),
+                              rightTitles: const AxisTitles(
+                                sideTitles: SideTitles(showTitles: false),
+                              ),
+                            ),
+                            borderData: FlBorderData(
+                              show: true,
+                              border: Border(
+                                bottom: BorderSide(color: gridColor),
+                                left: BorderSide(color: gridColor),
+                              ),
+                            ),
+                            gridData: FlGridData(
+                              show: true,
+                              drawVerticalLine: false,
+                              horizontalInterval: 20,
+                              getDrawingHorizontalLine: (value) {
+                                return FlLine(
+                                  color: gridColor,
+                                  strokeWidth: 1,
+                                  dashArray: [5, 5],
+                                );
+                              },
+                            ),
+                            barGroups: controller.barGroups,
+                          ),
+                        );
+                      }),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
@@ -282,7 +303,7 @@ class StatisticsView extends GetView<StatisticsController> {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withAlpha(13),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -306,7 +327,7 @@ class StatisticsView extends GetView<StatisticsController> {
                   title,
                   style: GoogleFonts.poppins(
                     fontSize: 12,
-                    color: textColor.withOpacity(0.7),
+                    color: textColor.withAlpha(179),
                   ),
                   overflow: TextOverflow.ellipsis,
                 ),
