@@ -121,6 +121,13 @@ class HabitCard extends StatelessWidget {
                       ? Lottie.asset(
                           'assets/animations/check.json',
                           repeat: false,
+                          errorBuilder: (context, error, stackTrace) {
+                            return const Icon(
+                              Icons.check_circle,
+                              color: Colors.green,
+                              size: 24,
+                            );
+                          },
                         )
                       : Container(
                           decoration: BoxDecoration(

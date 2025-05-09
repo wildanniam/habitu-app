@@ -67,6 +67,13 @@ class HomeView extends GetView<HomeController> {
                           Lottie.asset(
                             'assets/animations/empty.json',
                             width: 200,
+                            errorBuilder: (context, error, stackTrace) {
+                              return Icon(
+                                Icons.inbox,
+                                size: 64,
+                                color: Colors.grey[400],
+                              );
+                            },
                           ),
                           const SizedBox(height: 16),
                           const Text(
@@ -101,6 +108,13 @@ class HomeView extends GetView<HomeController> {
                           child: Lottie.asset(
                             'assets/animations/congrats.json',
                             repeat: false,
+                            errorBuilder: (context, error, stackTrace) {
+                              return const Icon(
+                                Icons.celebration,
+                                size: 64,
+                                color: Colors.amber,
+                              );
+                            },
                           ),
                         ),
                     ],
