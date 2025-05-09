@@ -9,8 +9,10 @@ class SplashView extends GetView<SplashController> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Get.isDarkMode;
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: isDark ? Colors.grey[900] : Colors.white,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -26,7 +28,7 @@ class SplashView extends GetView<SplashController> {
               style: GoogleFonts.poppins(
                 fontSize: 32,
                 fontWeight: FontWeight.bold,
-                color: Colors.black87,
+                color: isDark ? Colors.white : Colors.black87,
               ),
             ),
             const SizedBox(height: 8),
@@ -34,7 +36,7 @@ class SplashView extends GetView<SplashController> {
               'Bentuk Kebiasaan Baikmu',
               style: GoogleFonts.poppins(
                 fontSize: 16,
-                color: Colors.black54,
+                color: isDark ? Colors.white70 : Colors.black54,
               ),
             ),
           ],
