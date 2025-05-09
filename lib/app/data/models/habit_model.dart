@@ -19,6 +19,7 @@ class HabitModel {
   final bool isCompletedToday;
   final DateTime createdAt;
   final DateTime? lastCompletedAt;
+  final List<DateTime> completedDates;
 
   HabitModel({
     String? id,
@@ -29,8 +30,10 @@ class HabitModel {
     this.isCompletedToday = false,
     DateTime? createdAt,
     this.lastCompletedAt,
+    List<DateTime>? completedDates,
   })  : id = id ?? const Uuid().v4(),
-        createdAt = createdAt ?? DateTime.now();
+        createdAt = createdAt ?? DateTime.now(),
+        completedDates = completedDates ?? [];
 
   Map<String, dynamic> toJson() {
     return {
@@ -42,6 +45,8 @@ class HabitModel {
       'isCompletedToday': isCompletedToday,
       'createdAt': createdAt.toIso8601String(),
       'lastCompletedAt': lastCompletedAt?.toIso8601String(),
+      'completedDates':
+          completedDates.map((date) => date.toIso8601String()).toList(),
     };
   }
 
@@ -57,6 +62,10 @@ class HabitModel {
       lastCompletedAt: json['lastCompletedAt'] != null
           ? DateTime.parse(json['lastCompletedAt'])
           : null,
+      completedDates: (json['completedDates'] as List<dynamic>?)
+              ?.map((date) => DateTime.parse(date))
+              .toList() ??
+          [],
     );
   }
 
@@ -67,6 +76,7 @@ class HabitModel {
     int? streakCount,
     bool? isCompletedToday,
     DateTime? lastCompletedAt,
+    List<DateTime>? completedDates,
   }) {
     return HabitModel(
       id: id,
@@ -77,6 +87,7 @@ class HabitModel {
       isCompletedToday: isCompletedToday ?? this.isCompletedToday,
       createdAt: createdAt,
       lastCompletedAt: lastCompletedAt ?? this.lastCompletedAt,
+      completedDates: completedDates ?? this.completedDates,
     );
   }
 }

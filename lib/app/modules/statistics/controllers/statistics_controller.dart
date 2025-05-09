@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:intl/intl.dart';
 
 import '../../../data/services/habit_service.dart';
+import '../../../data/models/habit_model.dart';
 
 class StatisticsController extends GetxController {
   final HabitService _habitService = Get.find<HabitService>();
@@ -10,9 +12,12 @@ class StatisticsController extends GetxController {
   final totalHabits = 0.obs;
   final completedToday = 0.obs;
   final longestStreak = 0.obs;
+  final completionRate = 0.0.obs;
   final barGroups = <BarChartGroupData>[].obs;
   final showTooltip = false.obs;
   final tooltipIndex = 0.obs;
+  final selectedPeriod = 'Minggu'.obs;
+  final periodOptions = ['Minggu', 'Bulan', 'Tahun'].obs;
 
   @override
   void onInit() {
@@ -27,6 +32,13 @@ class StatisticsController extends GetxController {
     completedToday.value = habits.where((h) => h.isCompletedToday).length;
     longestStreak.value =
         habits.fold(0, (max, h) => h.streakCount > max ? h.streakCount : max);
+
+    // Hitung tingkat penyelesaian hari ini
+    if (totalHabits.value > 0) {
+      final completedHabits = habits.where((h) => h.isCompletedToday).length;
+      completionRate.value = (completedHabits / totalHabits.value) * 100;
+    }
+
     _generateBarChartData();
   }
 
@@ -40,15 +52,44 @@ class StatisticsController extends GetxController {
       const Color(0xFFBAE1FF), // Pastel Blue
     ];
 
-    // Generate dummy data for the last 7 days
-    for (int i = 0; i < 7; i++) {
+    final now = DateTime.now();
+    final habits = _habitService.habits;
+    int daysToShow = 7;
+
+    switch (selectedPeriod.value) {
+      case 'Minggu':
+        daysToShow = 7;
+        break;
+      case 'Bulan':
+        daysToShow = 30;
+        break;
+      case 'Tahun':
+        daysToShow = 365;
+        break;
+    }
+
+    // Hitung jumlah habit yang selesai per hari
+    for (int i = 0; i < daysToShow; i++) {
+      final date = now.subtract(Duration(days: daysToShow - 1 - i));
+      final completions = _getCompletionsForDate(habits, date);
+
+      // Hitung persentase penyelesaian untuk hari tersebut
+      final completionPercentage =
+          totalHabits.value > 0 ? (completions / totalHabits.value) * 100 : 0.0;
+
+      // Gunakan warna yang berbeda untuk hari ini
+      final isToday = DateFormat('yyyy-MM-dd').format(date) ==
+          DateFormat('yyyy-MM-dd').format(now);
+
       groups.add(
         BarChartGroupData(
           x: i,
           barRods: [
             BarChartRodData(
-              toY: (i + 1) * 2.0, // Dummy data
-              color: pastelColors[i % pastelColors.length],
+              toY: completionPercentage,
+              color: isToday
+                  ? Get.theme.colorScheme.primary
+                  : pastelColors[i % pastelColors.length],
               width: 20,
               borderRadius:
                   const BorderRadius.vertical(top: Radius.circular(6)),
@@ -59,6 +100,30 @@ class StatisticsController extends GetxController {
     }
 
     barGroups.value = groups;
+  }
+
+  int _getCompletionsForDate(List<HabitModel> habits, DateTime date) {
+    final dateStr = DateFormat('yyyy-MM-dd').format(date);
+    return habits.fold(0, (sum, habit) {
+      final isCompleted = habit.completedDates
+          .any((d) => DateFormat('yyyy-MM-dd').format(d) == dateStr);
+      return sum + (isCompleted ? 1 : 0);
+    });
+  }
+
+  void changePeriod(String period) {
+    selectedPeriod.value = period;
+    _generateBarChartData();
+  }
+
+  String getFormattedDate(int index) {
+    final now = DateTime.now();
+    final date = now.subtract(Duration(days: barGroups.length - 1 - index));
+    return DateFormat('dd/MM').format(date);
+  }
+
+  String getFormattedPercentage(double value) {
+    return '${value.toStringAsFixed(1)}%';
   }
 
   void showBarTooltip(int index) {
